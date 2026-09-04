@@ -1,0 +1,452 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0F0BB6797A530700B5A0B9E7 /* PasteQueueIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 178563EB14A18621693882F3 /* PasteQueueIcon.icon */; };
+		18E6CFED2EC423EFB03FD46E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 528CD81459766BBCBF3FC34E /* Assets.xcassets */; };
+		1CBB4AC2AF49121992D35BC0 /* PasteStackMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9208B0DE1CB41D6CDACC1E2 /* PasteStackMenu.swift */; };
+		26968079B750BA0E08E5D3B2 /* PasteStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB95A19318010D0F5A4F661 /* PasteStackTests.swift */; };
+		32E652E0D3699814EE84684F /* ClipboardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E070C7618F5A26FB8BCCEB24 /* ClipboardItem.swift */; };
+		3EC6B04D8528F1A4D884B694 /* PasteStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170F484A230B1FF826B2EA31 /* PasteStack.swift */; };
+		5CD63F2F22A71250EC7B0B25 /* PasteboardProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B863ECEAD09F51055FAA2930 /* PasteboardProviding.swift */; };
+		992A1B6E83F0EDEC786FD07A /* MockPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65655535468346D3640E0109 /* MockPasteboard.swift */; };
+		9BDD75AFCA31CA451F9265F7 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A751B5C6E7CDFBC548E294E /* HotkeyManager.swift */; };
+		A2554169AB2F2247401AC077 /* PasteQueueApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9120492BC3070642E4907B5D /* PasteQueueApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B523E4B3A9DA00B0E61C2B45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0F48336F7766B75314BE0618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B25753C458A64BBCD2ACE66D;
+			remoteInfo = PasteQueue;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		170F484A230B1FF826B2EA31 /* PasteStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteStack.swift; sourceTree = "<group>"; };
+		178563EB14A18621693882F3 /* PasteQueueIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = PasteQueueIcon.icon; sourceTree = "<group>"; };
+		2DB95A19318010D0F5A4F661 /* PasteStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteStackTests.swift; sourceTree = "<group>"; };
+		4A751B5C6E7CDFBC548E294E /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		528CD81459766BBCBF3FC34E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		54D1FD43BC2B929DE1CE83D2 /* PasteQueueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PasteQueueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		65655535468346D3640E0109 /* MockPasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPasteboard.swift; sourceTree = "<group>"; };
+		9120492BC3070642E4907B5D /* PasteQueueApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteQueueApp.swift; sourceTree = "<group>"; };
+		B863ECEAD09F51055FAA2930 /* PasteboardProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardProviding.swift; sourceTree = "<group>"; };
+		B9208B0DE1CB41D6CDACC1E2 /* PasteStackMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteStackMenu.swift; sourceTree = "<group>"; };
+		D8A6A57A3F89CBEF1CA96864 /* PasteQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PasteQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E070C7618F5A26FB8BCCEB24 /* ClipboardItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardItem.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		8B9030C9B34575B9C4C2FC2D = {
+			isa = PBXGroup;
+			children = (
+				E6F5AEF051EAA8C4AE0D1586 /* PasteQueue */,
+				93AA64AD2C56D7894C7BDA2E /* PasteQueueTests */,
+				DE8AF57C84CD46519F6338CB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		93AA64AD2C56D7894C7BDA2E /* PasteQueueTests */ = {
+			isa = PBXGroup;
+			children = (
+				65655535468346D3640E0109 /* MockPasteboard.swift */,
+				2DB95A19318010D0F5A4F661 /* PasteStackTests.swift */,
+			);
+			path = PasteQueueTests;
+			sourceTree = "<group>";
+		};
+		DE8AF57C84CD46519F6338CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D8A6A57A3F89CBEF1CA96864 /* PasteQueue.app */,
+				54D1FD43BC2B929DE1CE83D2 /* PasteQueueTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6F5AEF051EAA8C4AE0D1586 /* PasteQueue */ = {
+			isa = PBXGroup;
+			children = (
+				528CD81459766BBCBF3FC34E /* Assets.xcassets */,
+				E070C7618F5A26FB8BCCEB24 /* ClipboardItem.swift */,
+				4A751B5C6E7CDFBC548E294E /* HotkeyManager.swift */,
+				B863ECEAD09F51055FAA2930 /* PasteboardProviding.swift */,
+				9120492BC3070642E4907B5D /* PasteQueueApp.swift */,
+				178563EB14A18621693882F3 /* PasteQueueIcon.icon */,
+				170F484A230B1FF826B2EA31 /* PasteStack.swift */,
+				B9208B0DE1CB41D6CDACC1E2 /* PasteStackMenu.swift */,
+			);
+			path = PasteQueue;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B25753C458A64BBCD2ACE66D /* PasteQueue */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF2A8AB57AAB932859C8DAA9 /* Build configuration list for PBXNativeTarget "PasteQueue" */;
+			buildPhases = (
+				4A7269AB5FCF932C8DAEDBD4 /* Sources */,
+				F87F7C86AA1C5FD64375F078 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PasteQueue;
+			packageProductDependencies = (
+			);
+			productName = PasteQueue;
+			productReference = D8A6A57A3F89CBEF1CA96864 /* PasteQueue.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DCFC997781240EE005A11F38 /* PasteQueueTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6276B14A7295C75406CF2E28 /* Build configuration list for PBXNativeTarget "PasteQueueTests" */;
+			buildPhases = (
+				2DEE1494B50A6323F4F7E994 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FFF183F61BF80A76EB8852EC /* PBXTargetDependency */,
+			);
+			name = PasteQueueTests;
+			packageProductDependencies = (
+			);
+			productName = PasteQueueTests;
+			productReference = 54D1FD43BC2B929DE1CE83D2 /* PasteQueueTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0F48336F7766B75314BE0618 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B25753C458A64BBCD2ACE66D = {
+						DevelopmentTeam = 6D5U6N6YZA;
+						ProvisioningStyle = Automatic;
+					};
+					DCFC997781240EE005A11F38 = {
+						DevelopmentTeam = 6D5U6N6YZA;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A41F09A5F36F7383962C57DE /* Build configuration list for PBXProject "PasteQueue" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8B9030C9B34575B9C4C2FC2D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DE8AF57C84CD46519F6338CB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B25753C458A64BBCD2ACE66D /* PasteQueue */,
+				DCFC997781240EE005A11F38 /* PasteQueueTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F87F7C86AA1C5FD64375F078 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18E6CFED2EC423EFB03FD46E /* Assets.xcassets in Resources */,
+				0F0BB6797A530700B5A0B9E7 /* PasteQueueIcon.icon in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2DEE1494B50A6323F4F7E994 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				992A1B6E83F0EDEC786FD07A /* MockPasteboard.swift in Sources */,
+				26968079B750BA0E08E5D3B2 /* PasteStackTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A7269AB5FCF932C8DAEDBD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32E652E0D3699814EE84684F /* ClipboardItem.swift in Sources */,
+				9BDD75AFCA31CA451F9265F7 /* HotkeyManager.swift in Sources */,
+				A2554169AB2F2247401AC077 /* PasteQueueApp.swift in Sources */,
+				3EC6B04D8528F1A4D884B694 /* PasteStack.swift in Sources */,
+				1CBB4AC2AF49121992D35BC0 /* PasteStackMenu.swift in Sources */,
+				5CD63F2F22A71250EC7B0B25 /* PasteboardProviding.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FFF183F61BF80A76EB8852EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B25753C458A64BBCD2ACE66D /* PasteQueue */;
+			targetProxy = B523E4B3A9DA00B0E61C2B45 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		26013AD1BDE9C723A638DBE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = PasteQueueIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 6D5U6N6YZA;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.slenbder.pastequeue;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		398D641009358D6636494139 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3C31F6A203ED673921A77FC7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = PasteQueueIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 6D5U6N6YZA;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.slenbder.pastequeue;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8D9528258C82BAFFEC53394C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 6D5U6N6YZA;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.slenbder.PasteQueueTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PasteQueue.app/Contents/MacOS/PasteQueue";
+			};
+			name = Debug;
+		};
+		9F89C4D70E9433B133C5650D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		ABF8FBC96D4E9CEE2ED2F05C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 6D5U6N6YZA;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.slenbder.PasteQueueTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PasteQueue.app/Contents/MacOS/PasteQueue";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6276B14A7295C75406CF2E28 /* Build configuration list for PBXNativeTarget "PasteQueueTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D9528258C82BAFFEC53394C /* Debug */,
+				ABF8FBC96D4E9CEE2ED2F05C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A41F09A5F36F7383962C57DE /* Build configuration list for PBXProject "PasteQueue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9F89C4D70E9433B133C5650D /* Debug */,
+				398D641009358D6636494139 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FF2A8AB57AAB932859C8DAA9 /* Build configuration list for PBXNativeTarget "PasteQueue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C31F6A203ED673921A77FC7 /* Debug */,
+				26013AD1BDE9C723A638DBE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0F48336F7766B75314BE0618 /* Project object */;
+}

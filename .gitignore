@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+DerivedData/
+.build/
+.swiftpm/
+
+# Build products / distribution artifacts
+dist/
+
+# CocoaPods / SPM (uncomment if adopted later)
+# Pods/
+# .swiftpm/xcode/package.xcworkspace/xcshareddata/
