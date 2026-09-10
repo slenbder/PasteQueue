@@ -21,6 +21,11 @@ final class PasteStack: ObservableObject {
     @Published var isCollecting: Bool = false
     @Published var isAccessibilityTrusted: Bool
 
+    /// Fires when pasteNext() is invoked with nothing queued — a distinct signal (not a
+    /// @Published state flag) because there's nothing to hold onto: the UI reaction is a
+    /// one-shot icon flash, not persistent state that should survive a redraw.
+    let flashRequested = PassthroughSubject<Void, Never>()
+
     private let pasteboard: PasteboardProviding
     private var pollTimer: Timer?
     private var lastChangeCount: Int
@@ -176,7 +181,13 @@ final class PasteStack: ObservableObject {
     }
 
     func pasteNext() {
-        guard !queue.isEmpty else { return }
+        // Checked before any pasteboard access, and before anything isCollecting-related —
+        // isCollecting and queue.count are independent dimensions of state (see type-level
+        // doc), so an empty queue is a no-op regardless of whether a session is running.
+        guard !queue.isEmpty else {
+            flashRequested.send()
+            return
+        }
         let item = queue.removeFirst()
         logger.debug("queue removeFirst queue.count=\(self.queue.count, privacy: .public)")
 
