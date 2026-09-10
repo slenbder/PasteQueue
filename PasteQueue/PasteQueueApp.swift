@@ -46,6 +46,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var countLabel: CenteredLabelView?
     private var popover: NSPopover?
     private var queueSubscription: AnyCancellable?
+    private var flashSubscription: AnyCancellable?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Hide the Dock icon — this is a menu-bar-only utility.
@@ -151,6 +152,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 countLabel.isHidden = false
                 countLabel.text = "\(count)"
                 countLabel.textColor = count >= 99 ? .systemRed : .labelColor
+            }
+        }
+
+        flashSubscription = PasteStack.shared.flashRequested.sink { [weak self] in
+            self?.flashMenuBarIcon()
+        }
+    }
+
+    /// Brief alpha dip on the status item button — feedback for a ⌘⌥V that had nothing to
+    /// paste. Two nested runAnimationGroup calls (rather than one group with a reversed
+    /// autoreverses) so the exact ~0.1s-down/~0.1s-up shape is explicit and doesn't depend
+    /// on autoreverses' timing curve behaving the way we'd expect.
+    private func flashMenuBarIcon() {
+        guard let button = statusItem?.button else { return }
+        print("[DEBUG flash] start \(Date())")
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.1
+            button.animator().alphaValue = 0.3
+        } completionHandler: {
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.1
+                button.animator().alphaValue = 1.0
+            } completionHandler: {
+                print("[DEBUG flash] end \(Date())")
             }
         }
     }

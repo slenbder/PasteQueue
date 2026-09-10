@@ -63,8 +63,16 @@ struct PasteStackMenu: View {
                 Divider()
             }
 
-            Text(stack.isCollecting ? "Collecting… (\(stack.queue.count))" : "Idle")
-                .font(.headline)
+            // Recording state and queue count are two independent dimensions of state
+            // (see PasteStack's type-level doc) — each gets its own view bound only to
+            // its own source of truth, rather than being folded into one combined phrase
+            // that would read as a single linear step ("Collecting… (N)" -> "Ready").
+            HStack(spacing: 6) {
+                recordingIndicator
+                Text("·")
+                    .foregroundColor(.secondary)
+                queueCountLabel
+            }
 
             if !stack.queue.isEmpty {
                 Divider()
@@ -139,6 +147,28 @@ struct PasteStackMenu: View {
             stack.refreshAccessibilityStatus()
             launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
         }
+    }
+
+    /// Bound ONLY to isCollecting — never reads queue.count, so recording state can never
+    /// be inferred from (or confused with) how many items happen to be queued.
+    @ViewBuilder
+    private var recordingIndicator: some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(stack.isCollecting ? Color.red : Color.secondary)
+                .frame(width: 8, height: 8)
+            Text(stack.isCollecting ? "Recording" : "Stopped")
+                .font(.headline)
+        }
+    }
+
+    /// Bound ONLY to queue.count — never reads isCollecting, so the count reads as a fact
+    /// about the queue, not as a step in whatever the recording state happens to be doing.
+    @ViewBuilder
+    private var queueCountLabel: some View {
+        Text(stack.queue.count > 0 ? "\(stack.queue.count) in queue" : "Queue empty")
+            .font(.subheadline)
+            .foregroundColor(.secondary)
     }
 
     @ViewBuilder
