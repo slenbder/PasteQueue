@@ -86,6 +86,10 @@ struct PasteStackMenu: View {
                     .foregroundColor(.secondary)
                 queueCountLabel
             }
+            // The dot separator is purely visual — as three separate elements VoiceOver
+            // would stop on it and announce nothing, so it's folded into one label here.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(statusAccessibilityLabel)
 
             if !stack.queue.isEmpty {
                 Divider()
@@ -182,6 +186,12 @@ struct PasteStackMenu: View {
         Text(stack.queue.count > 0 ? "\(stack.queue.count) in queue" : "Queue empty")
             .font(.subheadline)
             .foregroundColor(.secondary)
+    }
+
+    private var statusAccessibilityLabel: String {
+        let recordingPart = stack.isCollecting ? "Recording" : "Stopped"
+        let queuePart = stack.queue.count > 0 ? "\(stack.queue.count) in queue" : "queue empty"
+        return "\(recordingPart), \(queuePart)"
     }
 
     @ViewBuilder
@@ -296,28 +306,40 @@ private struct QueueRowView: View {
     let onDelete: () -> Void
 
     @State private var isHovering = false
+    // .disabled(!isHovering) alone makes the delete button permanently unreachable for
+    // VoiceOver, which never hovers with a pointer — this tracks VoiceOver's on/off state
+    // (there's no AppKit notification specific to VoiceOver; the general accessibility
+    // display-options notification is the standard way to observe it) so the button stays
+    // enabled for VoiceOver regardless of hover.
+    @State private var isVoiceOverRunning = NSWorkspace.shared.isVoiceOverEnabled
 
     var body: some View {
         HStack {
-            Text("\(index + 1).")
-                .font(.callout)
-            switch entry.content {
-            case .text(let str):
-                Text(str.prefix(40))
+            Group {
+                Text("\(index + 1).")
                     .font(.callout)
-                    .lineLimit(1)
-            case .image(let nsImage):
-                Image(nsImage: nsImage)
-                    .resizable()
-                    .frame(width: 28, height: 28)
-            case .file(let url, let originalFilename):
-                Image(nsImage: NSWorkspace.shared.icon(forFile: url.path))
-                    .resizable()
-                    .frame(width: 28, height: 28)
-                Text(originalFilename)
-                    .font(.callout)
-                    .lineLimit(1)
+                switch entry.content {
+                case .text(let str):
+                    Text(str.prefix(40))
+                        .font(.callout)
+                        .lineLimit(1)
+                case .image(let nsImage):
+                    Image(nsImage: nsImage)
+                        .resizable()
+                        .frame(width: 28, height: 28)
+                case .file(let url, let originalFilename):
+                    Image(nsImage: NSWorkspace.shared.icon(forFile: url.path))
+                        .resizable()
+                        .frame(width: 28, height: 28)
+                    Text(originalFilename)
+                        .font(.callout)
+                        .lineLimit(1)
+                }
             }
+            // Scoped to just the number + content, not the whole row, so the delete
+            // button below stays its own independently-focusable element.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(contentAccessibilityLabel)
 
             Spacer(minLength: 4)
 
@@ -331,8 +353,12 @@ private struct QueueRowView: View {
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
-            .opacity(isHovering ? 1 : 0)
-            .disabled(!isHovering)
+            // opacity 0 turned out to not just be a visual affordance — confirmed live that
+            // VoiceOver's linear Next-Item navigation skips a zero-opacity element outright,
+            // so leaving it invisible-but-enabled during VoiceOver still made it unreachable.
+            .opacity(isHovering || isVoiceOverRunning ? 1 : 0)
+            .disabled(!isHovering && !isVoiceOverRunning)
+            .accessibilityLabel("Delete item \(index + 1)")
         }
         .padding(.horizontal, 4)
         .padding(.vertical, 2)
@@ -344,6 +370,22 @@ private struct QueueRowView: View {
         .onHover { hovering in
             debugLog("onHover entry=\(entry.id) hovering=\(hovering)")
             isHovering = hovering
+        }
+        .onReceive(
+            NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification)
+        ) { _ in
+            isVoiceOverRunning = NSWorkspace.shared.isVoiceOverEnabled
+        }
+    }
+
+    private var contentAccessibilityLabel: String {
+        switch entry.content {
+        case .text(let str):
+            return "Item \(index + 1): text, \(str.prefix(40))"
+        case .image:
+            return "Item \(index + 1): image"
+        case .file(_, let originalFilename):
+            return "Item \(index + 1): file, \(originalFilename)"
         }
     }
 }

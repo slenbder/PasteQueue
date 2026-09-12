@@ -107,6 +107,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // The fix: recompute this frame inside the queue sink below, every time it
         // fires, against whatever button.bounds actually is at that moment.
         button.addSubview(countLabel)
+        // The digit is spoken as part of the button's own accessibilityLabel (set in the
+        // queue sink below) — without this, VoiceOver would announce it a second time as
+        // its own unlabeled element when moving focus onto the status item.
+        countLabel.setAccessibilityElement(false)
 
         statusItem = item
         self.countLabel = countLabel
@@ -153,6 +157,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 countLabel.isHidden = false
                 countLabel.text = "\(count)"
                 countLabel.textColor = count >= 99 ? .systemRed : .labelColor
+            }
+
+            let itemWord = count == 1 ? "item" : "items"
+            if isCollecting {
+                button.setAccessibilityLabel("PasteQueue, recording, \(count) \(itemWord) in queue")
+            } else if count > 0 {
+                button.setAccessibilityLabel("PasteQueue, \(count) \(itemWord) queued, not recording")
+            } else {
+                button.setAccessibilityLabel("PasteQueue, idle")
             }
         }
 

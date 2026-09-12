@@ -1,0 +1,15 @@
+1: AXGroup pos=(851,41) size=(220,193) enabled=missing value
+2: AXUnknown pos=(867,57) size=(149,16) enabled=true
+3: AXScrollArea pos=(867,90) size=(188,64) enabled=missing value
+4: AXUnknown pos=(871,92) size=(9,15) enabled=true
+5: AXUnknown pos=(888,92) size=(83,15) enabled=true
+6: AXButton pos=(1029,93) size=(13,13) enabled=true
+7: AXUnknown pos=(871,119) size=(11,15) enabled=true
+8: AXUnknown pos=(890,119) size=(78,15) enabled=true
+9: AXButton pos=(1029,120) size=(13,13) enabled=true
+10: AXButton pos=(867,171) size=(26,15) enabled=true
+11: AXButton pos=(903,171) size=(31,15) enabled=true
+12: AXButton pos=(945,171) size=(30,15) enabled=true
+13: AXButton pos=(867,203) size=(106,15) enabled=true
+14: AXButton pos=(1031,203) size=(24,15) enabled=true
+

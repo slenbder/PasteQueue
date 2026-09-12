@@ -1,0 +1,127 @@
+=== VoiceOver AppleScript bridge raw transcript — clean session ===
+Method note: AXPress on the status item (via `click menu bar item`) opens the popover
+visually but does NOT transfer key focus for an accessory (LSUIElement) app — VoiceOver's
+cursor stays bound to Xcode underneath and "leaks" out of the popover after 2-3 stops.
+A real synthetic mouse click via `System Events click at {x,y}` (actual mouse down/up,
+same as a human click) DOES transfer focus correctly — verified via VO caption overlay
+showing "application, popover Recording, 3 in queue" with the focus ring on our status
+header. All navigation below uses this real-click method to open the popover, then real
+VO+Right-Arrow keystrokes (Control+Option+RightArrow) for linear Next Item navigation,
+reading state via `text under cursor of vo cursor`.
+
+STEP0 (after real click on status item, cursor lands on status header): application, popover Recording, 3 in queue
+STEP1: scroll area
+STEP2: Stop button
+STEP3: Paste button
+STEP4: Clear button
+STEP5: Launch at Login selected button
+STEP6: Quit button
+STEP7: Quit button
+STEP8: Quit button
+
+--- Retry: click on popover CONTENT (x=945,y=43) instead of tiny 24x24 status icon — reliable focus transfer, confirmed via System Events hit-test: 'group 1 of pop over 1 of menu bar item 1 of menu bar 2 of application process PasteQueue' ---
+STEP0 (after click, before any Right-Arrow): group
+STEP1: Recording, 3 in queue
+STEP2: scroll area
+STEP3: Stop button
+STEP4: Paste button
+STEP5: Clear button
+STEP6: Launch at Login selected button
+STEP7: Quit button
+STEP8: Quit button
+STEP9: Quit button
+
+=== (a)/(b) Interact into scroll area (Control+Option+Shift+Down), then Next Item through rows ===
+AFTER-INTERACT: Item 1: text, PasteQueue test item one
+ROWSTEP1: Item 1: text, PasteQueue test item one
+ROWSTEP2: Delete item 1 button
+ROWSTEP3: Item 2: text, PasteQueue test item two
+ROWSTEP4: Item 2: text, PasteQueue test item two
+ROWSTEP5: Delete item 2 button
+ROWSTEP6: list
+ROWSTEP7: scroll area
+
+=== CORRECTED clean re-run (0.4s settle between keystrokes) — full Interact + Next Item walk through all 3 rows ===
+IMPORTANT CORRECTION: an earlier faster-paced run (0.35s delay) appeared to show row 3 being skipped
+(scroll area -> Stop button directly after row 2's delete button). Re-running slower shows row 3 IS reachable.
+This means that earlier result was a dropped/coalesced keystroke from insufficient settle time between
+synthetic key events, NOT a real navigation bug. Treating the slower, reproducible run as authoritative.
+
+R1-content: Item 1: text, PasteQueue test item one
+R1-delete: Delete item 1 button
+R2-content: Item 2: text, PasteQueue test item two
+R2-delete: Delete item 2 button
+R3-content: Item 3: text, PasteQueue test item three
+after-R3-content-step1: Item 3: text, PasteQueue test item three
+after-R3-content-step2: Delete item 3 button
+after-R3-content-step3: Delete item 3 button
+
+=== (b) Delete activation, full repeat run, single continuous VO session (no bridge/process restart) ===
+Delete #1 (row 3, "PasteQueue test item three"):
+  - navigated to "Delete item 3 button" via Interact + Next Item
+  - activated via VO+Space (Control+Option+Space)
+  - text under cursor immediately after: "scroll area"
+  - last phrase (full utterance): "You are currently on a scroll area. To begin interacting
+    with the contents of this scroll area, press Control-Option-Shift-Down Arrow."
+  - ground truth (app debug log): "[PasteStack] queue remove queue.count=2" — confirmed deleted.
+  - Observed behavior: activating a delete button exits Interact mode entirely back to the
+    scroll-area container; VO does NOT land on an adjacent remaining row. User must
+    re-Interact (Shift+Down) to continue with the list. Real UX friction point, not a crash.
+
+Delete #2 (row 1, "PasteQueue test item one"), same continuous session, no VO/bridge restart:
+  - navigated to "Delete item 1 button" via Interact + Next Item (status header correctly
+    said "Recording, 2 in queue" beforehand, confirming state was in sync)
+  - activated via VO+Space
+  - last phrase after activation: "scroll area" (same exit-to-container behavior as delete #1)
+  - ground truth (app debug log): "[PasteStack] queue remove queue.count=1" — confirmed deleted.
+
+Testing-method caveat: synthetic key events sent via System Events occasionally produced a
+duplicate/stalled reading of the same item on the first Next-Item press after Interact,
+requiring a second press to actually advance. This reproduced consistently enough that it
+looks like a VoiceOver processing-queue quirk with rapid synthetic input, not a PasteQueue
+bug — confirmed by cross-checking against the app's own debug log, which showed no
+corresponding double-fire of state changes.
+
+=== (c) Start/Stop/Paste/Clear/Launch at Login/Quit walk (queue.count=1, isCollecting=true) ===
+cstep1: Stop button
+cstep2: Paste button
+cstep3: Clear button
+cstep4: Launch at Login selected button
+cstep5: Quit button
+cstep6: Quit button
+
+=== (d) Desync banner — safe method ===
+1. Unregistered via the popover's own "Launch at Login" toggle (VO-activated) — confirmed
+   via app debug log: refreshLaunchAtLoginStatus status=0 userIntended=false desynced=false
+   (still in sync, both flipped off together).
+2. Forced desync: `defaults write com.slenbder.pastequeue userEnabledLaunchAtLogin -bool true`
+3. IMPORTANT FINDING: reopening the popover (via AXPress `click`, and separately via a real
+   synthetic click that verifiably transferred VO focus) did NOT retrigger
+   refreshLaunchAtLoginStatus. It only fired ~3 times total, all within the first 35 seconds
+   after app launch. Every subsequent popover open in the same running process — including
+   several confirmed-focused opens during the row/delete tests — produced NO new
+   refreshLaunchAtLoginStatus log line. This contradicts the assumed design ("recomputed on
+   every popover .onAppear"); in practice it looks like SwiftUI's .onAppear on the popover's
+   root view only fires on the view's first materialization for the lifetime of the popover's
+   NSHostingController, not on every subsequent show(). Net effect: a real user who disables
+   Launch at Login in System Settings while PasteQueue has already been running for a while
+   would likely never see this banner, no matter how many times they reopen the popover,
+   until they quit and relaunch the app.
+4. Verified the "app launch" pathway works correctly: quit + relaunched PasteQueue via Xcode
+   with the forced defaults already in place. Console: "refreshLaunchAtLoginStatus status=0
+   userIntended=true desynced=true" — correctly detected desync at launch.
+5. Opened the (freshly launched, first-ever) popover. System Events structural dump showed
+   two new elements not present in the non-desynced state:
+     AXButton (banner) + AXStaticText name="This was turned off in System Settings. Click to re-enable."
+6. VoiceOver verbatim readings, real session, real focus (hit-test confirmed
+   "group 1 of pop over 1 of menu bar item 1 of menu bar 2 of application process PasteQueue"):
+     text under cursor (banner button): "⚠️ Launch at Login disabled button"
+     last phrase (full utterance): "You are currently on a button. To click this button,
+       press Control-Option-Space."
+     text under cursor (next item, caption): "This was turned off in System Settings.
+       Click to re-enable."
+7. Activated the banner button via VO+Space. Console confirmed resync:
+     "refreshLaunchAtLoginStatus status=1 userIntended=true desynced=false"
+8. Restored to original session-start state, verified: userEnabledLaunchAtLogin=true (defaults),
+   registered as a real Login Item (sfltool dumpbtm shows com.slenbder.pastequeue present).
+   App was NOT left desynced.
