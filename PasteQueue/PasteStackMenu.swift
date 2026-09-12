@@ -62,11 +62,15 @@ struct PasteStackMenu: View {
             }
 
             if stack.launchAtLoginDesynced {
-                Button("⚠️ Launch at Login отключён системой") {
+                Button {
                     stack.toggleLaunchAtLogin()
+                } label: {
+                    Text("⚠️ Launch at Login disabled")
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .foregroundColor(.orange)
-                Text("Похоже, элемент входа был снят вручную в System Settings. Нажмите, чтобы включить заново.")
+                Text("This was turned off in System Settings. Click to re-enable.")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Divider()
