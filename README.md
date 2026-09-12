@@ -8,6 +8,35 @@ A minimal menu-bar utility: ⌃⌘C collects copies (text or images) in order,
 1. Open `PasteQueue.dmg`.
 2. Drag `PasteQueue.app` into the `Applications` shortcut in the same window.
 
+## Uninstalling
+
+PasteQueue has no installer and no uninstaller — like most macOS utilities
+distributed outside the App Store, removing it is just dragging
+`PasteQueue.app` to the Trash. That leaves a few small things behind on disk,
+none of which are dangerous, but worth knowing about if you want a fully
+clean system:
+
+- **`~/Library/Application Support/PasteQueue/ClipboardFiles/`** — temporary
+  copies of files you've queued. The app cleans this up itself on every
+  normal launch; the only way anything is left here is if the app was
+  force-quit with files still queued and then deleted before being run
+  again. Safe to delete manually at any time.
+- **`~/Library/Preferences/com.slenbder.pastequeue.plist`** — your Launch at
+  Login preference. Safe to delete; `defaults delete com.slenbder.pastequeue`
+  also works from Terminal.
+- **Launch at Login entry** — macOS does *not* clean this up when you delete
+  the app. If you had "Launch at Login" enabled, go to **System Settings →
+  General → Login Items & Extensions** after deleting the app and remove
+  PasteQueue from that list — it'll otherwise sit there pointing at a Trashed
+  app indefinitely.
+
+To remove everything in one pass:
+```
+rm -rf ~/Library/Application\ Support/PasteQueue
+rm -f ~/Library/Preferences/com.slenbder.pastequeue.plist
+```
+(then check Login Items as above, and empty the Trash).
+
 ## How to open it (first launch only)
 
 This build is signed with a personal Apple Developer account, not a paid
