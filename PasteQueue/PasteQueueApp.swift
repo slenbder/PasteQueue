@@ -205,6 +205,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // dismissal relies on, so the popover only ever closes via a repeat click on
             // this same status item button (which counts as interacting with our own window).
             NSApp.activate(ignoringOtherApps: true)
+            PasteStack.shared.refreshLaunchAtLoginStatus()
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }
