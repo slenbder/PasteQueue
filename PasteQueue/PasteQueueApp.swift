@@ -52,6 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Hide the Dock icon — this is a menu-bar-only utility.
         NSApp.setActivationPolicy(.accessory)
         HotkeyManager.shared.start()
+        PasteStack.shared.refreshLaunchAtLoginStatus()
         setUpStatusItem()
     }
 

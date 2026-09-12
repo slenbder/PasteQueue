@@ -1,5 +1,6 @@
 import AppKit
 import Combine
+import ServiceManagement
 import os
 
 private let logger = Logger(subsystem: "com.slenbder.pastequeue", category: "PasteStack")
@@ -17,9 +18,13 @@ final class PasteStack: ObservableObject {
     /// Soft cap so a runaway collecting session can't grow the queue forever.
     static let maxQueueSize = 99
 
+    private static let userEnabledLaunchAtLoginKey = "userEnabledLaunchAtLogin"
+
     @Published var queue: [QueuedClipboardItem] = []
     @Published var isCollecting: Bool = false
     @Published var isAccessibilityTrusted: Bool
+    @Published var launchAtLoginEnabled: Bool
+    @Published var launchAtLoginDesynced: Bool = false
 
     /// Fires when pasteNext() is invoked with nothing queued — a distinct signal (not a
     /// @Published state flag) because there's nothing to hold onto: the UI reaction is a
@@ -53,13 +58,43 @@ final class PasteStack: ObservableObject {
         self.pasteboard = pasteboard
         self.lastChangeCount = pasteboard.changeCount
         self.isAccessibilityTrusted = AXIsProcessTrusted()
+        self.launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
         // A force-quit while the queue held file items leaves their copies orphaned on
         // disk with nothing left in memory to clean them up — sweep once at startup.
         Self.cleanupOrphanedFiles(referencedBy: queue)
+        refreshLaunchAtLoginStatus()
     }
 
     func refreshAccessibilityStatus() {
         isAccessibilityTrusted = AXIsProcessTrusted()
+    }
+
+    func refreshLaunchAtLoginStatus() {
+        let status = SMAppService.mainApp.status
+        let userIntendedEnabled = UserDefaults.standard.bool(forKey: Self.userEnabledLaunchAtLoginKey)
+        launchAtLoginEnabled = (status == .enabled)
+        // .requiresApproval — переходное состояние сразу после успешного register(),
+        // пока юзер не подтвердил Login Item в System Settings. Это НЕ рассинхрон —
+        // рассинхрон это когда система/юзер вне приложения реально снял регистрацию
+        // (.notRegistered) или бандл не найден (.notFound), при том что юзер сам
+        // включал через приложение.
+        launchAtLoginDesynced = userIntendedEnabled && (status == .notRegistered || status == .notFound)
+        logger.debug("refreshLaunchAtLoginStatus status=\(String(describing: status), privacy: .public) userIntended=\(userIntendedEnabled, privacy: .public) desynced=\(self.launchAtLoginDesynced, privacy: .public)")
+    }
+
+    func toggleLaunchAtLogin() {
+        do {
+            if launchAtLoginEnabled {
+                try SMAppService.mainApp.unregister()
+                UserDefaults.standard.set(false, forKey: Self.userEnabledLaunchAtLoginKey)
+            } else {
+                try SMAppService.mainApp.register()
+                UserDefaults.standard.set(true, forKey: Self.userEnabledLaunchAtLoginKey)
+            }
+        } catch {
+            logger.debug("toggleLaunchAtLogin failed: \(error.localizedDescription, privacy: .public)")
+        }
+        refreshLaunchAtLoginStatus()
     }
 
     func toggleCollecting() {

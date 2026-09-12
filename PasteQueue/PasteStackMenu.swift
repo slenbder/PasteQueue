@@ -1,5 +1,4 @@
 import SwiftUI
-import ServiceManagement
 import os
 
 private let menuLogger = Logger(subsystem: "com.slenbder.pastequeue", category: "PasteStackMenu")
@@ -25,7 +24,6 @@ private func debugLog(_ message: String) {
 
 struct PasteStackMenu: View {
     @ObservedObject var stack: PasteStack
-    @State private var launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
 
     // Manual drag-to-reorder state. AppKit's List backing draws its own insertion-line +
     // lifted-ghost visuals during onMove drags with no public SwiftUI hook to suppress
@@ -58,6 +56,17 @@ struct PasteStackMenu: View {
                 }
                 .foregroundColor(.orange)
                 Text("Hotkeys won't fire until this app is approved in System Settings.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Divider()
+            }
+
+            if stack.launchAtLoginDesynced {
+                Button("⚠️ Launch at Login отключён системой") {
+                    stack.toggleLaunchAtLogin()
+                }
+                .foregroundColor(.orange)
+                Text("Похоже, элемент входа был снят вручную в System Settings. Нажмите, чтобы включить заново.")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Divider()
@@ -122,11 +131,11 @@ struct PasteStackMenu: View {
 
             HStack {
                 Button {
-                    toggleLaunchAtLogin()
+                    stack.toggleLaunchAtLogin()
                 } label: {
                     HStack(spacing: 4) {
                         Text("Launch at Login")
-                        if launchAtLoginEnabled {
+                        if stack.launchAtLoginEnabled {
                             Image(systemName: "checkmark")
                         }
                     }
@@ -145,7 +154,7 @@ struct PasteStackMenu: View {
         .frame(width: 220)
         .onAppear {
             stack.refreshAccessibilityStatus()
-            launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
+            stack.refreshLaunchAtLoginStatus()
         }
     }
 
@@ -272,19 +281,6 @@ struct PasteStackMenu: View {
 
             break
         }
-    }
-
-    private func toggleLaunchAtLogin() {
-        do {
-            if launchAtLoginEnabled {
-                try SMAppService.mainApp.unregister()
-            } else {
-                try SMAppService.mainApp.register()
-            }
-        } catch {
-            // Best-effort: SMAppService can throw (e.g. app not running from /Applications yet).
-        }
-        launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
     }
 }
 
