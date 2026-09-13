@@ -128,4 +128,37 @@ final class PasteStackTests: XCTestCase {
         stack.checkPasteboard()
         XCTAssertEqual(stack.queue.map(\.content), [.text("A"), .text("B")], "new content after restart should still be picked up")
     }
+
+    func testMultipleImagesAreAllQueued() {
+        // checkPasteboard() reads images from the real NSPasteboard.general directly, not
+        // through PasteboardProviding (see the file-detection comment in PasteStack for why) —
+        // so the mock here only drives changeCount; the actual payload goes on the real pasteboard,
+        // same as a multi-selection copy from an app that vends more than one NSImage at once.
+        func makeImage(_ color: NSColor) -> NSImage {
+            let image = NSImage(size: NSSize(width: 4, height: 4))
+            image.lockFocus()
+            color.setFill()
+            NSBezierPath(rect: NSRect(x: 0, y: 0, width: 4, height: 4)).fill()
+            image.unlockFocus()
+            return image
+        }
+        let image1 = makeImage(.red)
+        let image2 = makeImage(.blue)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.writeObjects([image1, image2])
+
+        let mock = MockPasteboard()
+        let stack = PasteStack(pasteboard: mock)
+
+        mock.changeCount = 1
+        stack.checkPasteboard()
+
+        XCTAssertEqual(stack.queue.count, 2, "both images from a single multi-select copy should be queued, not just the first")
+        for entry in stack.queue {
+            guard case .image = entry.content else {
+                XCTFail("expected every queued entry to be an image")
+                return
+            }
+        }
+    }
 }

@@ -68,8 +68,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         guard let button = item.button else { return }
 
-        print("DEBUG button.bounds at setup: \(button.bounds)")
-
         // Both "menuBarIcon" (idle, with the drawn-in lines) and "menuBarIconFrame"
         // (same outer silhouette, hollow — used once the queue holds something so the
         // count label has room to sit inside it) share an identical 18x18 canvas and
@@ -122,7 +120,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         queueSubscription = PasteStack.shared.$queue.combineLatest(PasteStack.shared.$isCollecting).sink { queue, isCollecting in
             let count = queue.count
-            print("DEBUG button.bounds in sink (queue.count=\(count)): \(button.bounds)")
 
             // Recomputed every time, against the current button.bounds — see the
             // comment where countLabel is created for why this can't just be done once.
@@ -142,8 +139,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 width: labelWidth,
                 height: labelHeight
             )
-            print("DEBUG countLabel.frame after set: \(countLabel.frame)")
-            print("DEBUG countLabel.text: \(countLabel.text)")
 
             // Icon reflects "is a recording session active" (isCollecting OR there's still
             // something queued from one) — not just whether the queue happens to be non-empty.

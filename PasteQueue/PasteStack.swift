@@ -169,12 +169,21 @@ final class PasteStack: ObservableObject {
                 queue.append(QueuedClipboardItem(id: itemID, content: .file(url: storedURL, originalFilename: originalFilename)))
                 logger.debug("queue append type=file queue.count=\(self.queue.count, privacy: .public)")
             }
-        } else if let image = NSPasteboard.general.readObjects(forClasses: [NSImage.self], options: nil)?.first as? NSImage {
-            queue.append(QueuedClipboardItem(content: .image(image)))
-            logger.debug("queue append type=image queue.count=\(self.queue.count, privacy: .public)")
-        } else if let str = pasteboard.string(forType: .string), !str.isEmpty {
-            queue.append(QueuedClipboardItem(content: .text(str)))
-            logger.debug("queue append type=text queue.count=\(self.queue.count, privacy: .public)")
+        } else {
+            let images = (NSPasteboard.general.readObjects(forClasses: [NSImage.self], options: nil) as? [NSImage]) ?? []
+            if !images.isEmpty {
+                // Same reasoning as the file branch above: a single copy action can hand back
+                // more than one image (e.g. multi-selection in an app that vends several image
+                // representations at once) — queue each in the order the pasteboard gave them.
+                for image in images {
+                    guard queue.count < Self.maxQueueSize else { break }
+                    queue.append(QueuedClipboardItem(content: .image(image)))
+                    logger.debug("queue append type=image queue.count=\(self.queue.count, privacy: .public)")
+                }
+            } else if let str = pasteboard.string(forType: .string), !str.isEmpty {
+                queue.append(QueuedClipboardItem(content: .text(str)))
+                logger.debug("queue append type=text queue.count=\(self.queue.count, privacy: .public)")
+            }
         }
     }
 
@@ -191,7 +200,7 @@ final class PasteStack: ObservableObject {
             try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
             return destinationURL
         } catch {
-            print("[DEBUG capture] copy failed for \(sourceURL): \(error)")
+            logger.error("copyToClipboardStorage failed sourceURL=\(sourceURL.path, privacy: .public) error=\(error.localizedDescription, privacy: .public)")
             return nil
         }
     }
@@ -236,18 +245,14 @@ final class PasteStack: ObservableObject {
         }
 
         let pb = NSPasteboard.general
-        let clearContentsResult = pb.clearContents()
-        print("[DEBUG paste] clearContents changeCount: \(clearContentsResult)")
+        pb.clearContents()
         switch item.content {
         case .text(let str):
             pb.setString(str, forType: .string)
         case .image(let image):
             pb.writeObjects([image])
         case .file(let url, _):
-            print("[DEBUG paste] URL: \(url.path)")
-            print("[DEBUG paste] fileExists: \(FileManager.default.fileExists(atPath: url.path))")
-            let writeObjectsResult = pb.writeObjects([url as NSURL])
-            print("[DEBUG paste] writeObjects success: \(writeObjectsResult)")
+            pb.writeObjects([url as NSURL])
         }
         // Still collecting with items left in the queue means the timer is still running —
         // sync lastChangeCount to our own write's new changeCount too, otherwise the next

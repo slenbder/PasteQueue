@@ -3,25 +3,6 @@ import os
 
 private let menuLogger = Logger(subsystem: "com.slenbder.pastequeue", category: "PasteStackMenu")
 
-// TEMP DEBUG: os.Logger output isn't visible for processes launched outside Xcode's own
-// debugger session, so mirror to a plain file for external inspection. Remove once the
-// manual drag gesture is verified working.
-private func debugLog(_ message: String) {
-    let line = "\(Date()) \(message)\n"
-    if let data = line.data(using: .utf8) {
-        let path = "/tmp/pq_debug.log"
-        if FileManager.default.fileExists(atPath: path) {
-            if let handle = FileHandle(forWritingAtPath: path) {
-                handle.seekToEndOfFile()
-                handle.write(data)
-                handle.closeFile()
-            }
-        } else {
-            try? data.write(to: URL(fileURLWithPath: path))
-        }
-    }
-}
-
 struct PasteStackMenu: View {
     @ObservedObject var stack: PasteStack
 
@@ -221,7 +202,6 @@ struct PasteStackMenu: View {
             // gets the same stability without that problem.
             DragGesture(minimumDistance: 10, coordinateSpace: .named(Self.dragCoordinateSpace))
                 .onChanged { value in
-                    debugLog("onChanged entry=\(entry.id) translation=\(value.translation.height)")
                     if draggingID != entry.id {
                         draggingID = entry.id
                         swapCompensation = 0
@@ -368,7 +348,6 @@ private struct QueueRowView: View {
                 .fill(Color.primary.opacity(isHovering ? 0.08 : 0))
         )
         .onHover { hovering in
-            debugLog("onHover entry=\(entry.id) hovering=\(hovering)")
             isHovering = hovering
         }
         .onReceive(
