@@ -3,6 +3,24 @@
 A minimal menu-bar utility: ⌃⌘C collects copies (text or images) in order,
 ⌃⌘V pastes them back one at a time, FIFO (first copied, first pasted).
 
+## ⌨️ Hotkeys — read this before you buy
+
+PasteQueue uses two global hotkeys. **They are hardcoded in v1 — not
+configurable:**
+
+- **⌃⌘C** (Control + Command + C) — start/stop collecting
+- **⌃⌘V** (Control + Command + V) — paste the next item in the queue
+
+Check these against any hotkey tools you already have running (Raycast,
+Ice, Rectangle, BetterTouchTool, etc.) *before* buying — if either combo
+is already bound to something else, it will conflict. Configurable
+hotkeys are planned for a future version, not v1.
+
+## Requirements
+
+- macOS 13.0 (Ventura) or later
+- Apple Silicon only — Intel Macs are not supported and have not been tested
+
 ## Installing
 
 1. Open `PasteQueue.dmg`.
@@ -89,10 +107,10 @@ this once per copy of the app; a fresh download/rebuild will need it again.
    automatically — no need to remember to hit "Stop collecting."
 5. Click the menu bar icon any time to see what's queued, or hit Clear.
 
-The queue holds at most 50 items — anything copied past that is silently
-ignored (no alert) until you paste some off or clear the queue. A small
-orange dot appears on the menu bar icon once the queue reaches 20 items, as
-an early heads-up before you hit the cap.
+The queue holds at most 99 items — anything copied past that is silently
+ignored (no alert) until you paste some off or clear the queue. The counter
+on the menu bar icon turns red once you hit the cap, as a clear signal
+you're full.
 
 ## Launch at Login
 
@@ -115,8 +133,8 @@ run (⌘R or the shipped `.app`):
   - An image copied from a webpage in Safari (right-click → Copy Image)
 - **Launch at Login** — toggle it on, log out/in (or restart), confirm the
   app actually launches; toggle off, confirm it doesn't launch next time.
-- **Queue cap** — copy 50+ items in a row, confirm collecting past 50 is a
-  silent no-op and the orange dot shows up once you cross 20.
+- **Queue cap** — copy 99+ items in a row, confirm collecting past 99 is a
+  silent no-op and the counter turns red once you hit 99.
 - **⌃⌘C / ⌃⌘V hotkeys** — still needs a live keyboard and a granted
   Accessibility permission, same as before.
 - **Menu bar icon color follows what's under the menu bar, not the system
@@ -126,23 +144,36 @@ run (⌘R or the shipped `.app`):
   menu bar in each case. This is deliberately a wallpaper change, not a
   theme change: system Dark Mode + light wallpaper is exactly the case
   where the two can disagree, and the icon should still track the
-  wallpaper. The orange badge (when the queue is at 20+ items) must stay
-  orange in both cases — it's a separate view layered on top of the icon,
-  not part of the recolored template image.
+  wallpaper. The count label must stay legible in both cases — it's a
+  separate view layered on top of the icon, not part of the recolored
+  template image, so only its own color (red at the 99 cap) changes, never
+  the icon's recoloring behavior.
 
-## Known limitation: secure input fields
+## Known limitations (v1)
 
-⌃⌘V will not paste into **secure text fields** — password fields
-(`NSSecureTextField`), Keychain prompts, or a `sudo` password prompt in
-Terminal. When a secure field is focused, macOS enables "Secure Event Input,"
-which blocks *all* other processes — including PasteQueue's global hotkey
-monitor and its synthetic ⌘V keystroke — from observing or injecting
-keyboard events into that field. In practice: the hotkey may not even fire
-while a secure field has focus, and if it does, nothing gets typed. No crash,
-no error, no partial paste — just silently nothing, by macOS design. This is
-a platform security boundary (it's exactly what stops keyloggers and
-autotype tools from reading or injecting into password fields), not a bug in
-this app.
+- **Hotkeys are hardcoded.** ⌃⌘C / ⌃⌘V can't be remapped in v1; configurable
+  hotkeys are planned for a future version.
+- **VoiceOver support is basic.** You can tell what state the app is in and
+  perform the core actions, but:
+  - Reordering the queue by dragging has no VoiceOver equivalent yet.
+  - After deleting an item, VoiceOver focus drops to the scroll-area
+    container rather than moving to the next row — you'll need to
+    re-enter Interact mode before deleting the next one.
+- **Secure input fields.** ⌃⌘V will not paste into secure text fields —
+  password fields (`NSSecureTextField`), Keychain prompts, or a `sudo`
+  password prompt in Terminal. When a secure field is focused, macOS
+  enables "Secure Event Input," which blocks *all* other processes —
+  including PasteQueue's global hotkey monitor and its synthetic ⌘V
+  keystroke — from observing or injecting keyboard events into that field.
+  In practice: the hotkey may not even fire while a secure field has focus,
+  and if it does, nothing gets typed. No crash, no error, no partial paste —
+  just silently nothing, by macOS design. This is a platform security
+  boundary (it's exactly what stops keyloggers and autotype tools from
+  reading or injecting into password fields), not a bug in this app.
+- **Not notarized.** Signed with a personal Apple Developer account, not a
+  paid Developer ID — see "How to open it" above for the one-time
+  Gatekeeper bypass.
+- **Intel Macs are unsupported and untested** (Apple Silicon only).
 
 ## Where to go from here
 
