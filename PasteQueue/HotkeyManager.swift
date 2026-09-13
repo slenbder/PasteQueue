@@ -1,4 +1,5 @@
 import AppKit
+import Carbon
 
 /// Registers two global hotkeys system-wide:
 ///   ⌃⌘C  — toggle collecting mode on/off
@@ -35,14 +36,46 @@ final class HotkeyManager {
         let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         guard flags == [.control, .command] else { return }
 
-        switch event.keyCode {
-        case 8: // ANSI 'C'
+        switch HotkeyManager.asciiCapableCharacter(for: event.keyCode)?.lowercased() {
+        case "c":
             PasteStack.shared.toggleCollecting()
-        case 9: // ANSI 'V'
+        case "v":
             PasteStack.shared.pasteNext()
         default:
             break
         }
+    }
+
+    /// Translates a virtual keyCode into the character it would produce under the
+    /// system's ASCII-capable hardware layout, ignoring the currently active Unicode
+    /// input source (e.g. Cyrillic, Japanese). This is what keeps ⌃⌘C/⌃⌘V tracking the
+    /// physical hardware key under Dvorak/AZERTY, while staying unaffected by non-Latin
+    /// input sources, since those are software input methods layered on the same
+    /// physical ANSI hardware rather than alternate hardware layouts.
+    private static func asciiCapableCharacter(for keyCode: UInt16) -> String? {
+        guard let inputSource = TISCopyCurrentASCIICapableKeyboardLayoutInputSource()?.takeRetainedValue() else { return nil }
+        guard let layoutDataPointer = TISGetInputSourceProperty(inputSource, kTISPropertyUnicodeKeyLayoutData) else { return nil }
+        let layoutData = Unmanaged<CFData>.fromOpaque(layoutDataPointer).takeUnretainedValue() as Data
+        var deadKeyState: UInt32 = 0
+        var chars = [UniChar](repeating: 0, count: 4)
+        var length = 0
+        let status = layoutData.withUnsafeBytes { rawBuffer -> OSStatus in
+            let keyboardLayout = rawBuffer.baseAddress!.assumingMemoryBound(to: UCKeyboardLayout.self)
+            return UCKeyTranslate(
+                keyboardLayout,
+                keyCode,
+                UInt16(kUCKeyActionDown),
+                0,
+                UInt32(LMGetKbdType()),
+                UInt32(kUCKeyTranslateNoDeadKeysBit),
+                &deadKeyState,
+                chars.count,
+                &length,
+                &chars
+            )
+        }
+        guard status == noErr, length > 0 else { return nil }
+        return String(utf16CodeUnits: chars, count: length)
     }
 
     private func requestAccessibilityIfNeeded() {
