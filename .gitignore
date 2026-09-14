@@ -9,6 +9,7 @@ xcuserdata/
 DerivedData/
 .build/
 .swiftpm/
+a11y-test-artifacts/.buildtmp/
 
 # Build products / distribution artifacts
 dist/

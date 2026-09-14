@@ -175,7 +175,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// on autoreverses' timing curve behaving the way we'd expect.
     private func flashMenuBarIcon() {
         guard let button = statusItem?.button else { return }
-        print("[DEBUG flash] start \(Date())")
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.1
             button.animator().alphaValue = 0.3
@@ -183,8 +182,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSAnimationContext.runAnimationGroup { context in
                 context.duration = 0.1
                 button.animator().alphaValue = 1.0
-            } completionHandler: {
-                print("[DEBUG flash] end \(Date())")
             }
         }
     }

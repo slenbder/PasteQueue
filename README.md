@@ -131,6 +131,16 @@ run (⌘R or the shipped `.app`):
     too, or just ⌘C an existing screenshot file's contents in Preview)
   - An image opened in Preview, ⌘C
   - An image copied from a webpage in Safari (right-click → Copy Image)
+- **File copy/paste** — copy a few different sources and confirm each
+  queues as its own item (icon + original filename) and pastes back the
+  actual file, not a broken/generic-icon stand-in:
+  - A single file in Finder, ⌘C
+  - A multi-selection of several files in Finder, ⌘C — confirm each one
+    queues as a separate item, in the order they were selected
+  - A photo copied out of Photos.app — this is the case the on-disk copy
+    step exists for (Photos only grants a read handle for the instant of
+    the copy), so confirm it still pastes correctly, not just that it
+    queues
 - **Launch at Login** — toggle it on, log out/in (or restart), confirm the
   app actually launches; toggle off, confirm it doesn't launch next time.
 - **Queue cap** — copy 99+ items in a row, confirm collecting past 99 is a
@@ -177,12 +187,17 @@ run (⌘R or the shipped `.app`):
 
 ## Where to go from here
 
-- Text and images are supported (`ClipboardItem.text` / `.image`, detected
-  via `NSPasteboard.readObjects(forClasses: [NSImage.self], ...)`, which
-  covers PNG/JPEG/TIFF/GIF/HEIC without listing UTIs by hand). Other
-  pasteboard types (file URLs, RTF, etc.) still fall outside scope — extending
-  further means adding another case to `ClipboardItem` and another branch in
-  `PasteStack.checkPasteboard()`.
+- Text, images, and files are all supported (`ClipboardItem.text` / `.image`
+  / `.file`). Images are detected via `NSPasteboard.readObjects(forClasses:
+  [NSImage.self], ...)`, which covers PNG/JPEG/TIFF/GIF/HEIC without listing
+  UTIs by hand; files (single or Finder/Photos multi-select) are copied into
+  PasteQueue's own storage at capture time so they can still be pasted even
+  if the source app's sandbox only grants a read handle for the instant of
+  the copy. Rich/styled text (e.g. from Pages or Word) is captured as its
+  plain-text fallback — formatting is dropped, since `ClipboardItem` has no
+  attributed-string case. Extending further (RTF with formatting, or any
+  other pasteboard type) means adding another case to `ClipboardItem` and
+  another branch in `PasteStack.checkPasteboard()`.
 - No persistence — the queue lives in memory and resets when you quit. That's
   intentional for this use case; add it later if you ever want the queue to
   survive a relaunch.
@@ -190,17 +205,5 @@ run (⌘R or the shipped `.app`):
   (paid Apple Developer Program membership required) — not needed for
   personal use or sharing with a few people who don't mind the one-time
   Gatekeeper bypass above.
-- **Icon placeholders**: the menu bar currently shows `Image(systemName:
-  "list.clipboard")` (see the `TODO` in `PasteQueueApp.swift`), and
-  `Assets.xcassets/AppIcon.appiconset` has an empty 1024×1024 slot. Once the
-  custom icon is ready:
-  1. Drag the 1024×1024 export into the `AppIcon` slot in the asset catalog
-     editor — no other changes needed there.
-  2. For the menu bar icon, add the template asset to `Assets.xcassets`,
-     then in `PasteQueueApp.swift` swap the `Image(systemName: "list.clipboard")`
-     line for `Image("MenuBarIcon")` and mark it template-rendered
-     (`.renderingMode(.template)` if it isn't already flagged as a template
-     image in the asset catalog) so it follows the menu bar's light/dark/
-     highlight state like the SF Symbol does now.
 
 See `SETUP.md` for building from source.

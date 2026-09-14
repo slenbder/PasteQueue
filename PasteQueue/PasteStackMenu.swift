@@ -1,7 +1,4 @@
 import SwiftUI
-import os
-
-private let menuLogger = Logger(subsystem: "com.slenbder.pastequeue", category: "PasteStackMenu")
 
 struct PasteStackMenu: View {
     @ObservedObject var stack: PasteStack
@@ -26,10 +23,7 @@ struct PasteStackMenu: View {
     }
 
     var body: some View {
-        // TEMP DIAGNOSTIC (Bug 2B): confirms whether body is re-evaluated after
-        // PasteStack.isCollecting changes (e.g. via the ⌃⌘C hotkey while the popover is open).
-        menuLogger.debug("body evaluated isCollecting=\(stack.isCollecting, privacy: .public) queue.count=\(stack.queue.count, privacy: .public)")
-        return VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             if !stack.isAccessibilityTrusted {
                 Button("⚠️ Accessibility required") {
                     let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
@@ -144,6 +138,13 @@ struct PasteStackMenu: View {
         .onAppear {
             stack.refreshAccessibilityStatus()
             stack.refreshLaunchAtLoginStatus()
+        }
+        // rowHeights is keyed by item id and only ever grows via queueRow's onAppear —
+        // prune entries whose item has left the queue (paste, delete, clear) so it doesn't
+        // accumulate one stale entry per item ever queued over the app's lifetime.
+        .onChange(of: stack.queue) { newQueue in
+            let liveIDs = Set(newQueue.map(\.id))
+            rowHeights = rowHeights.filter { liveIDs.contains($0.key) }
         }
     }
 

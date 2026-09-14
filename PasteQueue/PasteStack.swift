@@ -150,8 +150,8 @@ final class PasteStack: ObservableObject {
         //
         // Both this and the NSImage branch below go straight to the real pasteboard (not behind
         // PasteboardProviding) for the same reason: they're the one AppKit API that already knows
-        // how to do this correctly without us hand-listing UTI types. Untested by design — same as
-        // the write side, which has always talked to NSPasteboard.general directly.
+        // how to do this correctly without us hand-listing UTI types. Tests cover these branches
+        // through the real general pasteboard while the mock only controls changeCount.
         let fileURLs = (NSPasteboard.general.readObjects(
             forClasses: [NSURL.self],
             options: [.urlReadingFileURLsOnly: true]

@@ -1,115 +1,288 @@
 {
+  "features" : [
+    "refractivity",
+    "specular-location"
+  ],
   "fill" : {
     "linear-gradient" : [
-      "display-p3:0.90980,0.78824,0.60784,1.00000",
-      "display-p3:0.68265,0.47555,0.26869,1.00000"
+      "display-p3:0.93333,0.95294,0.97255,1.00000",
+      "display-p3:0.91825,0.90386,1.00000,1.00000"
     ]
   },
   "groups" : [
     {
-      "hidden" : false,
+      "blend-mode" : "darken",
+      "blur-material" : null,
+      "hidden" : true,
       "layers" : [
         {
+          "fill" : {
+            "solid" : "extended-gray:1.00000,1.00000"
+          },
           "hidden" : false,
-          "image-name" : "Vector 2.svg",
-          "name" : "Vector 2",
+          "image-name" : "Овал.svg",
+          "name" : "Овал",
+          "opacity" : 1,
           "position" : {
-            "scale" : 0.9,
+            "scale" : 1,
             "translation-in-points" : [
-              0,
-              -31.449999999999932
+              -89.99999999999997,
+              -162.0000294249179
             ]
           }
         },
         {
+          "fill" : {
+            "solid" : "extended-srgb:0.38039,0.33333,0.96078,0.50000"
+          },
           "hidden" : false,
-          "image-name" : "Rectangle 8 2.svg",
-          "name" : "Rectangle 8 2",
+          "image-name" : "квадрат (копия).svg",
+          "name" : "квадрат (копия)",
+          "opacity" : 1,
           "position" : {
-            "scale" : 0.9,
+            "scale" : 1,
             "translation-in-points" : [
-              0,
-              173
+              -103.00001309496005,
+              -2.3613694452251366e-05
             ]
           }
         },
         {
+          "fill" : {
+            "solid" : "extended-srgb:0.00000,0.53333,1.00000,0.50000"
+          },
           "hidden" : false,
-          "image-name" : "Rectangle 5.svg",
-          "name" : "Rectangle 5",
+          "image-name" : "квадрат (копия) 4.svg",
+          "name" : "квадрат (копия) 4",
+          "opacity" : 1,
           "position" : {
-            "scale" : 0.9,
+            "scale" : 1,
             "translation-in-points" : [
-              -107.09999999999991,
-              50.64999999999998
+              -41.99999999999994,
+              -2.942491789781343e-05
             ]
           }
         },
         {
+          "fill" : {
+            "solid" : "extended-srgb:0.20392,0.78039,0.34902,0.50000"
+          },
           "hidden" : false,
-          "image-name" : "Rectangle 5.svg",
-          "name" : "Rectangle 5",
+          "image-name" : "квадрат (копия) 3.svg",
+          "name" : "квадрат (копия) 3",
+          "opacity" : 1,
           "position" : {
-            "scale" : 0.9,
+            "scale" : 1,
             "translation-in-points" : [
-              -107.09999999999991,
-              -72.65000000000009
+              4.000000000000057,
+              -1.3044958670881215
             ]
           }
         },
         {
+          "fill" : {
+            "solid" : "extended-srgb:1.00000,0.55294,0.15686,0.50000"
+          },
           "hidden" : false,
-          "image-name" : "Ellipse 1 2.svg",
-          "name" : "Ellipse 1 2",
+          "image-name" : "квадрат (копия) 2.svg",
+          "name" : "квадрат (копия) 2",
+          "opacity" : 1,
           "position" : {
-            "scale" : 0.9,
+            "scale" : 1,
             "translation-in-points" : [
-              144,
-              -11.000000000000057
+              34.00000000000006,
+              -2.089961094497994e-05
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "extended-srgb:1.00000,0.21961,0.23529,0.50000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "extended-srgb:1.00000,0.21961,0.23529,0.50000"
+              }
+            }
+          ],
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "квадрат (копия) 1.svg",
+          "name" : "квадрат (копия) 1",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              54.500015500000075,
+              -2.942491789781343e-05
             ]
           }
         }
       ],
+      "lighting" : "individual",
+      "position" : {
+        "scale" : 1.16,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0.208984375,
+        "enabled" : true,
+        "strength" : -1
+      },
       "shadow" : {
         "kind" : "neutral",
         "opacity" : 0.5
       },
+      "specular" : "inside",
       "translucency" : {
         "enabled" : true,
         "value" : 0.3
       }
     },
     {
+      "blend-mode-specializations" : [
+        {
+          "value" : "darken"
+        },
+        {
+          "appearance" : "dark",
+          "value" : "normal"
+        },
+        {
+          "appearance" : "tinted",
+          "value" : "screen"
+        }
+      ],
+      "blur-material" : 0.42,
+      "hidden" : false,
       "layers" : [
         {
-          "image-name" : "1111 1.svg",
-          "name" : "1111 1",
-          "opacity-specializations" : [
-            {
-              "value" : 0.6
-            },
-            {
-              "appearance" : "dark",
-              "value" : 0
-            },
-            {
-              "appearance" : "tinted",
-              "value" : 0
-            }
-          ],
+          "blend-mode" : "hard-light",
+          "fill" : "automatic",
+          "image-name" : "Rectangle 8.svg",
+          "name" : "Rectangle 8",
+          "opacity" : 1,
           "position" : {
-            "scale" : 0.9,
+            "scale" : 0.8,
             "translation-in-points" : [
-              -0.4500000000000455,
-              -31
+              0.44999999999976126,
+              182.00000000000006
+            ]
+          }
+        },
+        {
+          "blend-mode" : "hard-light",
+          "fill" : "automatic",
+          "hidden" : false,
+          "image-name" : "Rectangle 7.svg",
+          "name" : "Rectangle 7",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              -94.75000000000023,
+              72.80000000000001
+            ]
+          }
+        },
+        {
+          "blend-mode" : "hard-light",
+          "fill" : "automatic",
+          "hidden" : false,
+          "image-name" : "Rectangle 5 2.svg",
+          "name" : "Rectangle 5 2",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              -96.1999776538907,
+              -36.799999999999955
+            ]
+          }
+        },
+        {
+          "blend-mode" : "hard-light",
+          "fill" : "automatic",
+          "image-name" : "Ellipse 1 4.svg",
+          "name" : "Ellipse 1 4",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              128.0000000000001,
+              18
+            ]
+          }
+        },
+        {
+          "blend-mode" : "hard-light",
+          "fill" : "automatic",
+          "image-name" : "Vector.svg",
+          "name" : "Vector",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              -5.684341886080802e-14,
+              -1.304480645478975
+            ]
+          }
+        },
+        {
+          "blend-mode" : "hard-light",
+          "fill" : "automatic",
+          "hidden" : false,
+          "image-name" : "1111 1 2.svg",
+          "name" : "1111 1 2",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
             ]
           }
         }
       ],
+      "lighting-specializations" : [
+        {
+          "value" : "individual"
+        },
+        {
+          "appearance" : "dark",
+          "value" : "individual"
+        }
+      ],
+      "opacity-specializations" : [
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
+      "position" : {
+        "scale" : 1.16,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0.98953125,
+        "enabled" : true,
+        "strength" : -3.90625e-05
+      },
       "shadow" : {
         "kind" : "neutral",
         "opacity" : 0.5
       },
+      "specular" : true,
       "translucency" : {
         "enabled" : true,
         "value" : 0.3

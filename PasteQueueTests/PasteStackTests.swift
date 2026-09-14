@@ -161,4 +161,68 @@ final class PasteStackTests: XCTestCase {
             }
         }
     }
+
+    // Mirrors testMultipleImagesAreAllQueued above. The file-URL branch in checkPasteboard()
+    // went through the exact same "only the first of several got queued" bug as the image
+    // branch (both loop over an array read from the pasteboard), but only the image branch
+    // had a regression test guarding it. This closes that coverage gap for the file branch.
+    func testMultipleFilesAreAllQueued() {
+        let tempDir = FileManager.default.temporaryDirectory
+        let file1 = tempDir.appendingPathComponent("pastequeue-test-1-\(UUID().uuidString).txt")
+        let file2 = tempDir.appendingPathComponent("pastequeue-test-2-\(UUID().uuidString).txt")
+        try! "first".write(to: file1, atomically: true, encoding: .utf8)
+        try! "second".write(to: file2, atomically: true, encoding: .utf8)
+        defer {
+            try? FileManager.default.removeItem(at: file1)
+            try? FileManager.default.removeItem(at: file2)
+        }
+
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.writeObjects([file1, file2] as [NSURL])
+
+        let mock = MockPasteboard()
+        let stack = PasteStack(pasteboard: mock)
+
+        mock.changeCount = 1
+        stack.checkPasteboard()
+
+        XCTAssertEqual(stack.queue.count, 2, "both files from a single multi-select copy should be queued, not just the first")
+        let filenames = stack.queue.map { entry -> String? in
+            guard case .file(_, let originalFilename) = entry.content else { return nil }
+            return originalFilename
+        }
+        XCTAssertEqual(filenames, [file1.lastPathComponent, file2.lastPathComponent], "queued in pasteboard order, each keeping its own original filename")
+
+        stack.clear()
+    }
+
+    // copyToClipboardStorage() can fail for one file in a multi-file copy (disk full,
+    // permissions, the source vanishing between the Finder copy and our read) and is
+    // documented to skip that entry via `continue` rather than aborting the whole batch.
+    // Regression-guards that a single bad entry doesn't drop or corrupt its siblings.
+    func testFileCopyFailureDoesNotBlockSubsequentFiles() {
+        let tempDir = FileManager.default.temporaryDirectory
+        let missingFile = tempDir.appendingPathComponent("pastequeue-does-not-exist-\(UUID().uuidString).txt")
+        let goodFile = tempDir.appendingPathComponent("pastequeue-test-good-\(UUID().uuidString).txt")
+        try! "still here".write(to: goodFile, atomically: true, encoding: .utf8)
+        defer { try? FileManager.default.removeItem(at: goodFile) }
+
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.writeObjects([missingFile, goodFile] as [NSURL])
+
+        let mock = MockPasteboard()
+        let stack = PasteStack(pasteboard: mock)
+
+        mock.changeCount = 1
+        stack.checkPasteboard()
+
+        XCTAssertEqual(stack.queue.count, 1, "the file that failed to copy should be skipped, not crash or block the one after it")
+        guard case .file(_, let originalFilename) = stack.queue.first?.content else {
+            XCTFail("expected the surviving entry to be a file")
+            return
+        }
+        XCTAssertEqual(originalFilename, goodFile.lastPathComponent)
+
+        stack.clear()
+    }
 }
